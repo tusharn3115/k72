@@ -34,17 +34,21 @@ const Agence = () => {
   gsap.registerPlugin(ScrollTrigger);
 
   useGSAP(() => {
-    // Use ScrollTrigger directly without gsap.to wrapper for real-time updates
     const st = ScrollTrigger.create({
       trigger: imageDivRef.current,
-      // markers: true,
       start: "top 27.5%",
       end: "top -100%",
       pin: true,
-      onUpdate: (self) => {
+      pinSpacing: true,
+      pinReparent: true,
+      pinType: 'transform',
+      scrub: 1,
+      anticipatePin: 1,
+      invalidateOnRefresh: true,
+      onUpdate: (elem) => {
         let imgIndex;
-        if (self.progress < 1) {
-          imgIndex = Math.floor(self.progress * imagesArr.length);
+        if (elem.progress < 1) {
+          imgIndex = Math.floor(elem.progress * imagesArr.length);
         } else {
           imgIndex = imagesArr.length - 1;
         }
@@ -63,7 +67,7 @@ const Agence = () => {
 
   return (
     <div>
-      <div className="section1">
+      <div className="section1 py-1">
         <div
           ref={imageDivRef}
           className="absolute overflow-hidden h-[20vw] w-[15vw] rounded-3xl top-50 left-[30vw] border border-zinc-400/20"
