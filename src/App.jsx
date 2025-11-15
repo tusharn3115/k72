@@ -9,7 +9,7 @@ const App = () => {
 
 
   return (
-    <div className="text-[#fff]">
+    <div className="text-[#ffff]">
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/agence" element={<Agence />} />
