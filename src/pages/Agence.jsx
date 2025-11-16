@@ -1,10 +1,14 @@
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/all";
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef } from "react";
 
 const Agence = () => {
-  const imageDivRef = useRef(null);
+
+  gsap.registerPlugin(ScrollTrigger)
+
+  const imageDivRef = useRef(null)
+  const imageRef = useRef(null)
 
   const imagesArr = [
     "https://k72.ca/images/teamMembers/Carl_480x640.jpg?w=480&h=640&fit=crop&s=f0a84706bc91a6f505e8ad35f520f0b7",
@@ -20,98 +24,58 @@ const Agence = () => {
     "https://k72.ca/images/teamMembers/joel_480X640_3.jpg?w=480&h=640&fit=crop&s=1cadbf143b3aa916b1b414464acbb4d6",
   ];
 
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const imageRefs = useRef([]);
 
-  // Preload all images
-  useEffect(() => {
-    imagesArr.forEach((src) => {
-      const img = new Image();
-      img.src = src;
-    });
-  }, []);
+  useGSAP(function () {
 
-  gsap.registerPlugin(ScrollTrigger);
-
-  useGSAP(() => {
-    const st = ScrollTrigger.create({
-      trigger: imageDivRef.current,
-      start: "top 27.5%",
-      end: "top -100%",
-      pin: true,
-      pinSpacing: true,
-      pinReparent: true,
-      pinType: 'transform',
-      scrub: 1,
-      anticipatePin: 1,
-      invalidateOnRefresh: true,
-      onUpdate: (elem) => {
-        let imgIndex;
-        if (elem.progress < 1) {
-          imgIndex = Math.floor(elem.progress * imagesArr.length);
-        } else {
-          imgIndex = imagesArr.length - 1;
+    gsap.to(imageDivRef.current, {
+      scrollTrigger: {
+        trigger: imageDivRef.current,
+        // markers: true,
+        start: 'top 28%',
+        end: 'top -70%',
+        pin: true,
+        pinSpacing: true,
+        pinReparent: true,
+        pinType: 'transform',
+        scrub: 1, 
+        anticipatePin: 1,
+        invalidateOnRefresh: true,
+        onUpdate: (elem) => {
+          let imageIndex;
+          if (elem.progress < 1) {
+            imageIndex = Math.floor(elem.progress * imagesArr.length)
+          } else {
+            imageIndex = imagesArr.length - 1
+          }
+          imageRef.current.src = imagesArr[imageIndex]
         }
-        
-        // Update immediately using requestAnimationFrame for smooth updates
-        requestAnimationFrame(() => {
-          setCurrentIndex(imgIndex);
-        });
-      },
-    });
+      }
+    })
+  })
 
-    return () => {
-      st.kill();
-    };
-  });
 
   return (
-    <div>
-      <div className="section1 py-1">
-        <div
-          ref={imageDivRef}
-          className="absolute overflow-hidden h-[20vw] w-[15vw] rounded-3xl top-50 left-[30vw] border border-zinc-400/20"
-        >
-          {imagesArr.map((src, index) => (
-            <img
-              key={index}
-              ref={(el) => (imageRefs.current[index] = el)}
-              className="absolute top-0 left-0 h-full w-full object-cover"
-              style={{
-                opacity: index === currentIndex ? 1 : 0,
-                pointerEvents: index === currentIndex ? 'auto' : 'none',
-              }}
-              src={src}
-              alt={`Team member ${index + 1}`}
-              loading={index < 3 ? 'eager' : 'lazy'}
-            />
-          ))}
+    <div className='parent'>
+      <div id='page1' className='py-1 '>
+        <div ref={imageDivRef} className='absolute overflow-hidden lg:h-[20vw] h-[30vw] lg:rounded-3xl rounded-xl lg:w-[15vw] w-[25vw] lg:top-96 -top-80 lg:left-[30vw] left-[30vw]'>
+          <img ref={imageRef} className='h-full object-cover w-full' src="https://k72.ca/uploads/teamMembers/Carl_480x640-480x640.jpg" alt="" />
         </div>
-        <div className="relative font-[lausBold]">
-          <div className="mt-[55vh]">
-            <h1 className="text-[19vw] text-center uppercase leading-[17vw]">
-              Soixan7e <br />
-              Douze
-            </h1>
+        <div className='relative font-[lausBold]'>
+          <div className='lg:mt-[55vh] mt-[30vh]'>
+            <h1 className='text-[20vw] text-center text-black uppercase leading-[18vw]'>Soixan7e <br />
+              Douze</h1>
           </div>
-
-          <div className="pl-[40%] mt-16">
-            <p className="text-5xl">
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              Notre curiosité nourrit notre créativité. On reste humbles et on
-              dit non aux gros egos, même le vôtre. Une marque est vivante. Elle
-              a des valeurs, une personnalité, une histoire. Si on oublie ça, on
-              peut faire de bons chiffres à court terme, mais on la tue à long
-              terme. C'est pour ça qu'on s'engage à donner de la perspective,
-              pour bâtir des marques influentes.
-            </p>
+          <div className='lg:pl-[40%] lg:mt-20 mt-4 p-3'>
+            <p className='lg:text-6xl text-xl leading-tight text-black'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Notre curiosité nourrit notre créativité. On reste humbles et on dit non aux gros egos, même le vôtre. Une marque est vivante. Elle a des valeurs, une personnalité, une histoire. Si on oublie ça, on peut faire de bons chiffres à court terme, mais on la tue à long terme. C’est pour ça qu’on s’engage à donner de la perspective, pour bâtir des marques influentes.</p>
           </div>
         </div>
       </div>
+      
+      <div id='page2' className=" h-screen">
 
-      <div className="section2 h-screen"></div>
+      </div>
     </div>
-  );
-};
+  )
+}
 
-export default Agence;
+export default Agence

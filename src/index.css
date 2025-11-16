@@ -10,6 +10,28 @@
     src: url(../public/fonts/Lausanne-500.woff2)
 }
 
-body {
-    background-color: #111;
+
+.moveX {
+    animation-name: moveAnimation;
+    animation-duration: 10s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
+@keyframes moveAnimation {
+    from{
+        transform: translateX(0);
+    }
+    to{
+        transform: translateX(-100%);
+    }
+}
+
+
+.move-link {
+    opacity: 0;
+    transition: all ease 0.3s;
+}
+
+.link:hover .move-link{
+    opacity: 1;
 }
